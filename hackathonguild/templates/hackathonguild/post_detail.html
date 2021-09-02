@@ -1,0 +1,25 @@
+{% extends 'hackathonguild/base.html' %} {% load static %}
+{% block title %} post_detail {%endblock title %}
+{% block contents %}
+
+<h1>{{ post.product_name }}</h1>
+<p>{{ post.poster_name }}</p>
+<p>{{ post.poster_mail }}</p>
+
+<form action="{% url 'hackathonguild:join' post.id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{{ post.product_name }}</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <p>参加者名:<input type="text" name="participant_name"></p>
+        <p>参加者メアド:<input type="email" name="participant_mail"></p>
+        <p>参加プロダクトID: <input type="number" name="participate_product_id" value="{{ post.id }}" readonly></p>
+        <p>意気込み:<input type="text" name="enthusiasm" maxlength="200"></p>
+
+    </fieldset>
+    <button type="submit" class="btn btn-sm btn-outline-secondary">参加申請</button>
+    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back()">戻る</button>
+
+</form>
+
+{% endblock contents %}

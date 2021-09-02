@@ -1,0 +1,19 @@
+{% extends 'hackathonguild/base.html' %} {% load static %}
+{% block title %} make_post {%endblock title %}
+{% block contents %}
+
+<form action="{% url 'hackathonguild:submit_post' %}" method="post">
+    {% csrf_token %}
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <p>投稿者名:<input type="text" name="poster_name"></p>
+        <p>投稿者メアド:<input type="email" name="poster_mail"></p>
+        <p>プロダクト名:<input type="text" name="product_name" maxlength="50"></p>
+        <p>ハッカソン開催日:<input type="date" name="hackathon_date"></p>
+        <p>募集人数: <input type="number" name="recluting_headcount" min="1"></p>
+        <p>プロダクト概要:<input type="text" name="product_brief" maxlength="200"></p>
+        <p>説明用資料:<input type="file" name="file"></p>
+
+    <input type="submit" name="submit_post" value="submit_post">
+</form>
+
+{% endblock contents %}
