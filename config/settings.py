@@ -124,3 +124,10 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Sending Email(追加したところ)
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_HOST_USER = 'ibguild2021'
+EMAIL_HOST_PASSWORD = 'Hackathon2109'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True 

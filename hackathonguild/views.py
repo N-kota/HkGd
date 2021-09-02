@@ -2,6 +2,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Post, Participant
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.conf import settings
 import random
 import string
 import datetime
@@ -63,15 +65,19 @@ def join_to_project(request, post_id):
     enthusiasm = request.POST.get('enthusiasm')
     participate_product_id = request.POST.get('participate_product_id')
     participate_date = timezone.now()
+    poster_mail = ('taukoman1025@gmail.com',)
+    from_address = 'ibguild2021@gmail.com'
+    mail_subject = '参加希望が届いています'
+    mail_massage = 'participant_nameからの参加希望が届いています。承認はこちらから'
 
-    
     Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date)
-
+    print(poster_mail)
     post = get_object_or_404(Post, pk=post_id)
     print('join')
     context = {
         'post': post
     }
+    send_mail(mail_subject, mail_massage, from_address, poster_mail, fail_silently=False)
     return render(request, 'hackathonguild/post_detail.html', context)
 
 
