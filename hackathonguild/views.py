@@ -56,18 +56,20 @@ def join_to_project(request, post_id):
     enthusiasm = request.POST.get('enthusiasm')
     participate_product_id = request.POST.get('participate_product_id')
     participate_date = timezone.now()
-    poster_mail = ('taukoman1025@gmail.com',)
+    queryset = Post.objects.get(id = participate_product_id)
+    poster_mail = (queryset.poster_mail,)
     from_address = 'ibguild2021@gmail.com'
     mail_subject = '参加希望が届いています'
-    mail_massage = 'participant_nameからの参加希望が届いています。承認はこちらから'
-
+    mail_massage = str(participant_name)+'からの参加希望が届いています。承認はこちらから'
+    print(mail_massage)
+    print(poster_mail)
     Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date)
 
-    print(poster_mail)
+    
     send_mail(mail_subject, mail_massage, from_address, poster_mail, fail_silently=False)
-
     return redirect('hackathonguild:index')
 
+    
 
 
 def make_random_string(length):
