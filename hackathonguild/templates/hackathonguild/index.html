@@ -3,36 +3,31 @@
 {% block contents %}
 
 <header>
-    <div class="collapse bg-dark" id="navbarHeader">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-8 col-md-7 py-4">
-            <h4 class="text-white">About</h4>
-            <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
-          </div>
-          <div class="col-sm-4 offset-md-1 py-4">
-            <h4 class="text-white">Contact</h4>
-            <ul class="list-unstyled">
-              <li><a href="#" class="text-white">Follow on Twitter</a></li>
-              <li><a href="#" class="text-white">Like on Facebook</a></li>
-              <li><a href="#" class="text-white">Email me</a></li>
-            </ul>
-          </div>
-        </div>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'hackathonguild:index' %}">
+        <img src="{% static 'hackathonguild/images/peopleicon.svg' %}" height="20px" width="20px" alt="man">
+        <strong>Hackathon Guild</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item active">
+            <a class="nav-link" aria-current="page" href="{% url 'hackathonguild:index' %}">募集を見る</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'hackathonguild:make_post' %}">募集する</a>
+          </li>
+        </ul>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="検索" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
       </div>
     </div>
-    
-    <div class="navbar navbar-dark bg-dark shadow-sm">
-      <div class="container">
-        <a href="#" class="navbar-brand d-flex align-items-center">
-          <img src="{% static 'images/people_icon.svg' %}" width="20" height="20">
-          <strong>Hackathon Guild</strong>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
-    </div>
+  </nav>
   </header>
   
   <main>
@@ -43,8 +38,7 @@
           <h1 class="fw-light">投稿プロダクト一覧</h1>
           <p class="lead text-muted">投稿されたハッカソンの募集はこのページに表示されます．</p>
           <p>
-            <a href="#" class="btn btn-primary my-2">Main call to action</a>
-            <a href="#" class="btn btn-secondary my-2">Secondary action</a>
+            <a href="{% url 'hackathonguild:make_post' %}" class="btn btn-primary my-2">メンバーを募集してみる</a>
           </p>
         </div>
       </div>
@@ -62,12 +56,13 @@
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="{% url 'hackathonguild:post_detail' post.id %}">{{ post.product_name }} role="img" aria-label="Placeholder: {{ post.product_name }}" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ post.product_name }}</text></svg>
     
                     <div class="card-body">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <p class="card-text">{{ post.product_brief }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='{% url 'hackathonguild:post_detail' post.id %}'">View</button>
                             </div>
-                            <small class="text-muted">9 mins</small>
+                            <small class="text-muted">募集:{{ post.recluting_headcount }}人</small>
+                            <small class="text-muted">開催:{{ post.hackathon_date }}</small>
                         </div>
                     </div>
                 </div>
@@ -80,7 +75,6 @@
     {% else %}
     <p>No posts are available.</p>
     {% endif %}
-<p><a href="{% url 'hackathonguild:make_post' %}">投稿する</a></p>
   </main>
   
   <footer class="text-muted py-5">
