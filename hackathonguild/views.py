@@ -67,6 +67,8 @@ def join_to_project(request, post_id):
     send_mail(mail_subject, mail_massage, from_address, poster_mail, fail_silently=False)
     return redirect('hackathonguild:index')
 
+    
+
 
 def make_random_string(length):
    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
