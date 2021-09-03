@@ -25,6 +25,7 @@ def post_detail(request, post_id):
     }
     return render(request, 'hackathonguild/post_detail.html', context)
 
+
 def make_post(request):
     return render(request, 'hackathonguild/make_post.html')
 
@@ -44,19 +45,9 @@ def submit_post(request):
     #post_delete_date = datetime.datetime.combine(timezone.now(), basetime) + datetime.timedelta(hours=1)
     post_delete_date = timezone.now() + datetime.timedelta(hours=1)
 
-    print(poster_name)
-    print(hackathon_date)
-    print(recluting_headcount)
-
     post = Post.objects.create(poster_name=poster_name, poster_mail=poster_mail, product_name=product_name, hackathon_date=hackathon_date, recluting_headcount=recluting_headcount, delete_key=delete_key, product_brief=product_brief, file=file, posted_date=posted_date, post_delete_date=post_delete_date)
 
-
-    latest_posts = Post.objects.order_by('-posted_date')
-
-    context = {
-        'latest_posts': latest_posts,
-    }
-    return render(request, 'hackathonguild/index.html', context)
+    return redirect('hackathonguild:index')
 
 
 def join_to_project(request, post_id):
@@ -71,14 +62,12 @@ def join_to_project(request, post_id):
     mail_massage = 'participant_nameからの参加希望が届いています。承認はこちらから'
 
     Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date)
+
     print(poster_mail)
-    post = get_object_or_404(Post, pk=post_id)
-    print('join')
-    context = {
-        'post': post
-    }
     send_mail(mail_subject, mail_massage, from_address, poster_mail, fail_silently=False)
-    return render(request, 'hackathonguild/post_detail.html', context)
+
+    return redirect('hackathonguild:index')
+
 
 
 def make_random_string(length):
