@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'hackathonguild.apps.HackathonguildConfig',
+    'django_slack',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,7 @@ EMAIL_HOST_USER = 'ibguild2021'
 EMAIL_HOST_PASSWORD = 'Hackathon2109'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# デバッグ用：以下の設定だとコンソールに出力される
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SLACK_WEBHOOK_ENDPOINT = 'https://hooks.slack.com/services/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'
