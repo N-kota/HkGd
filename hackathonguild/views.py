@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Post, Participant
+from .tasks import send_email,send_slack_message
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
@@ -38,7 +39,7 @@ def submit_post(request):
     recluting_headcount = request.POST.get('recluting_headcount')
     product_brief = request.POST.get('product_brief')
     file = request.POST.get('file')
-
+    
     delete_key = make_random_string(8)
     posted_date = timezone.now()
     #basetime = datetime.time(0,00,00)
@@ -57,16 +58,17 @@ def join_to_project(request, post_id):
     participate_product_id = request.POST.get('participate_product_id')
     participate_date = timezone.now()
     queryset = Post.objects.get(id = participate_product_id)
-    poster_mail = (queryset.poster_mail,)
+    to_mail = (queryset.poster_mail,)
     from_address = 'ibguild2021@gmail.com'
     mail_subject = '参加希望が届いています'
-    mail_massage = str(participant_name)+'からの参加希望が届いています。承認はこちらから'
-    print(mail_massage)
-    print(poster_mail)
-    Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date)
-
+    mail_message = str(participant_name)+'からの参加希望が届いています。承認はこちらから'
     
-    send_mail(mail_subject, mail_massage, from_address, poster_mail, fail_silently=False)
+    Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date)
+    #print(mail_message)
+    #print(to_mail)
+    send_slack_message(mail_message)
+    send_email(mail_message,to_mail)
+    #send_mail(mail_subject, mail_message, from_address, to_mail, fail_silently=False)
     return redirect('hackathonguild:index')
 
     
