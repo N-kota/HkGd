@@ -1,0 +1,14 @@
+{% extends 'hackathonguild/base.html' %} {% load static %}
+{% block title %} accept_participant {%endblock title %}
+{% block contents %}
+
+<form action="{% url 'hackathonguild:accept_participant' %}" method="post">
+    {% csrf_token %}
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    <input type="hidden" name="token" value="{{ token }}">
+    <button type="submit" class="btn btn-success">申請受諾</button>
+
+</form>
+
+
+{% endblock contents %}
