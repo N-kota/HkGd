@@ -1,24 +1,40 @@
 from django.db.models import query
+from django.http.request import HttpRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
-from .models import Post, Participant
-from .tasks import send_email, send_slack_message
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 from rest_framework import exceptions
 from django.core.mail import send_mail
 from django.conf import settings
+from .models import Post, Participant
+from .tasks import send_email, send_slack_message
 import random
 import string
 import datetime
 import secrets
 
 
-# Create your views here.
+# ページネーション用に、Pageオブジェクトを返す。
+def paginate_query(request, queryset, count):
+    paginator = Paginator(queryset, count)
+    page = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginatot.page(paginator.num_pages)
+    return page_obj
+
+
 def index(request):
     latest_posts = Post.objects.order_by('-posted_date')
+    page_obj = paginate_query(request, latest_posts, settings.PAGE_PER_ITEM) # ページネーション
 
     context = {
         'latest_posts': latest_posts,
+        'page_obj': page_obj,
     }
     return render(request, 'hackathonguild/index.html', context)
 
@@ -66,14 +82,14 @@ def join_to_project(request, post_id):
     queryset = Post.objects.get(id = participate_product_id)
 
     endpoint = queryset.webhookURL
-    to_mail = queryset.poster_mail
-    
+    to_mail = (queryset.poster_mail,)
+
     token = secrets.token_urlsafe(64)
     token_delete_date = timezone.datetime.now() + timezone.timedelta(days=1)
     accept_participant_url = 'http://127.0.0.1:8000/hackathonguild/jump_to_accept_participant/' + token
-    
+
     mail_message = str(participant_name)+'からの参加希望が届いています。承認はこちらから' + accept_participant_url
-    
+
     Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date, token=token, token_delete_date=token_delete_date)
 
     send_slack_message(mail_message,endpoint)
@@ -95,7 +111,8 @@ def jump_to_accept_participant(request, token):
             }
             return render(request, 'hackathonguild/accept_participant.html', context)
     else:
-        raise exceptions.AuthenticationFailed({'message': '有効なトークンではありませんでした．'})
+        return HttpResponse('有効なトークンではありませんでした．')
+
 
 
 def accept_participant(request):
@@ -107,14 +124,17 @@ def accept_participant(request):
         poster_queryset = Post.objects.get(id=participant_query_set.participate_product_id)
         mail_message = str(poster_queryset.product_name)+'への参加が受諾されました！'
         send_email(mail_message, to_mail)
-    else:
-        raise exceptions.AuthenticationFailed({'message': 'トークンの有効期限が切れています'})
+        participant_query_set.token = ''
+        participant_query_set.save()
 
-    return redirect('hackathonguild:index')
+        return redirect('hackathonguild:index')
+    else:
+        return HttpResponse('有効なトークンではありませんでした．')
 
 
 def make_random_string(length):
    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
 
 def delete_POST(request,post_id):
     input_key = request.POST.get('delete_key')
@@ -126,3 +146,4 @@ def delete_POST(request,post_id):
 
     else:
         return redirect('hackathonguild:index')
+
