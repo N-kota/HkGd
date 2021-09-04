@@ -37,6 +37,7 @@ def make_post(request):
 def submit_post(request):
     poster_name = request.POST.get('poster_name')
     poster_mail = request.POST.get('poster_mail')
+    webhookURL = request.POST.get('webhookURL')
     product_name = request.POST.get('product_name')
     hackathon_date = request.POST.get('hackathon_date')
     recluting_headcount = request.POST.get('recluting_headcount')
@@ -49,7 +50,7 @@ def submit_post(request):
     #post_delete_date = datetime.datetime.combine(timezone.now(), basetime) + datetime.timedelta(hours=1)
     post_delete_date = timezone.now() + datetime.timedelta(hours=1)
 
-    post = Post.objects.create(poster_name=poster_name, poster_mail=poster_mail, product_name=product_name, hackathon_date=hackathon_date, recluting_headcount=recluting_headcount, delete_key=delete_key, product_brief=product_brief, file=file, posted_date=posted_date, post_delete_date=post_delete_date)
+    post = Post.objects.create(poster_name=poster_name, poster_mail=poster_mail, webhookURL= webhookURL, product_name=product_name, hackathon_date=hackathon_date, recluting_headcount=recluting_headcount, delete_key=delete_key, product_brief=product_brief, file=file, posted_date=posted_date, post_delete_date=post_delete_date)
 
     return redirect('hackathonguild:index')
 
@@ -61,21 +62,16 @@ def join_to_project(request, post_id):
     participate_product_id = request.POST.get('participate_product_id')
     participate_date = timezone.now()
     queryset = Post.objects.get(id = participate_product_id)
-
-    accept_participant_url = 'http://127.0.0.1:8000/hackathonguild/accept_participant/' + secrets.token_urlsafe(64)
-  
+    endpoint = queryset.webhookURL
     to_mail = (queryset.poster_mail,)
-    from_address = 'ibguild2021@gmail.com'
-    mail_subject = '参加希望が届いています'
-    mail_massage = str(participant_name)+'からの参加希望が届いています。承認はこちらから' + accept_participant_url
+    accept_participant_url = 'http://127.0.0.1:8000/hackathonguild/accept_participant/' + secrets.token_urlsafe(64)
+    
+    print(endpoint)
+    mail_message = str(participant_name)+'からの参加希望が届いています。承認はこちらから' + accept_participant_url
     
     Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date)
-    #print(mail_message)
-    #print(to_mail)
-    send_slack_message(mail_message)
+    send_slack_message(mail_message,endpoint)
     send_email(mail_message,to_mail)
-    #send_mail(mail_subject, mail_message, from_address, to_mail, fail_silently=False)
-
     return redirect('hackathonguild:index')
 
 

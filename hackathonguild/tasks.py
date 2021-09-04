@@ -14,8 +14,9 @@ def send_email(message,toaddress):
 
 
 # Slack投稿(Incoming Webhook 使用)
-def send_slack_message(message):
-    requests.post(settings.SLACK_WEBHOOK_ENDPOINT,
+def send_slack_message(message,endpoint):
+    SLACK_WEBHOOK_ENDPOINT = endpoint
+    requests.post(SLACK_WEBHOOK_ENDPOINT,
                   data=json.dumps({
                       'text': message,  # 投稿するテキスト
                       'username': u'me',  # 投稿のユーザー名

@@ -7,6 +7,7 @@ from django.utils import timezone
 class Post(models.Model):
     poster_name = models.CharField('投稿者名', max_length=50)
     poster_mail = models.EmailField('投稿者メールアドレス', max_length=50)
+    webhookURL = models.TextField('投稿者slackwebhookURL', max_length=100,null=True)
     product_name = models.CharField('プロダクト名', max_length=50)
     hackathon_date = models.DateField('ハッカソン開催日')
     recluting_headcount = models.IntegerField('募集人数')
