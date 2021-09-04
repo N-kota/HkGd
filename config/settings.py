@@ -141,3 +141,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #SLACK_WEBHOOK_ENDPOINT = 'https://hooks.slack.com/services/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'
 
+PAGE_PER_ITEM = 15
