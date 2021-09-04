@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Post, Participant
+from .tasks import send_email,send_slack_message
 from django.utils import timezone
 from rest_framework import exceptions
 from django.core.mail import send_mail
@@ -41,7 +42,7 @@ def submit_post(request):
     recluting_headcount = request.POST.get('recluting_headcount')
     product_brief = request.POST.get('product_brief')
     file = request.POST.get('file')
-
+    
     delete_key = make_random_string(8)
     posted_date = timezone.now()
     #basetime = datetime.time(0,00,00)
@@ -62,16 +63,19 @@ def join_to_project(request, post_id):
     queryset = Post.objects.get(id = participate_product_id)
 
     accept_participant_url = 'http://127.0.0.1:8000/hackathonguild/accept_participant/' + secrets.token_urlsafe(64)
-
-    poster_mail = (queryset.poster_mail,)
+  
+    to_mail = (queryset.poster_mail,)
     from_address = 'ibguild2021@gmail.com'
     mail_subject = '参加希望が届いています'
     mail_massage = str(participant_name)+'からの参加希望が届いています。承認はこちらから' + accept_participant_url
-    print(mail_massage)
-    print(poster_mail)
+    
     Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date)
+    #print(mail_message)
+    #print(to_mail)
+    send_slack_message(mail_message)
+    send_email(mail_message,to_mail)
+    #send_mail(mail_subject, mail_message, from_address, to_mail, fail_silently=False)
 
-    send_mail(mail_subject, mail_massage, from_address, poster_mail, fail_silently=False)
     return redirect('hackathonguild:index')
 
 
