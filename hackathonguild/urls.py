@@ -11,5 +11,6 @@ urlpatterns = [
     path('<int:post_id>/join/', views.join_to_project, name='join'),
     path('jump_to_accept_participant/<token>/', views.jump_to_accept_participant, name='jump_to_accept_participant'),
     path('accept_participant/', views.accept_participant, name='accept_participant'),
+    path('<int:post_id>/delete/',views.delete_POST, name='delete'),
 
 ]

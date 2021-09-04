@@ -110,3 +110,14 @@ def accept_participant(request):
 
 def make_random_string(length):
    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+def delete_POST(request,post_id):
+    input_key = request.POST.get('delete_key')
+    del_POS = Post.objects.get(id = post_id)
+    delete_key = del_POS.delete_key
+    if delete_key == input_key:
+        del_POS.delete()
+        return redirect('hackathonguild:index')
+
+    else:
+        return redirect('hackathonguild:index')

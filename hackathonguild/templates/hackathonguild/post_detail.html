@@ -28,11 +28,12 @@
         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
             data-bs-target="#participantFormModal">参加申請</button>
         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back()">戻る</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+            data-bs-target="#deleteModal">投稿削除</button>
     </div>
     </form>
-
-
-    <!-- Modal -->
+    
+    <!-- participantModal -->
     <div class="modal fade" id="participantFormModal" tabindex="-1" aria-labelledby="participantFormModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -79,10 +80,38 @@
                         </div>
                     </form>
                 </div>
+
             </div>
         </div>
 </main>
 
-
-
+<!---deleteModal-->>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">投稿削除フォーム</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="{% url 'hackathonguild:delete' post.id %}" method="post">
+                {% csrf_token %}
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    
+                <input type="hidden" name="participate_product_id" value="{{ post.id }}">
+    
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">削除キー</span>
+                    <input type="text" class="form-control" name="delete_key" placeholder="delete_key" aria-label="delete_key" aria-describedby="basic-addon1" maxlength="50">
+                </div>
+                
+                <div>
+                    <button type="submit" class="btn btn-secondary" name="submit_post" id="submitPost">投稿削除</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
 {% endblock contents %}
