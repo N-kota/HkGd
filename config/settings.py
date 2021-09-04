@@ -115,7 +115,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -135,7 +135,7 @@ EMAIL_HOST_USER = 'ibguild2021'
 EMAIL_HOST_PASSWORD = 'Hackathon2109'
 EMAIL_PORT = 587
 
-EMAIL_USE_TLS = True 
+EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # デバッグ用：以下の設定だとコンソールに出力される
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
