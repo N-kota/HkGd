@@ -17,6 +17,7 @@ class Post(models.Model):
     posted_date = models.DateTimeField('投稿日', default=timezone.now)
     post_delete_date = models.DateTimeField('投稿削除日', blank=True)
 
+
     def __str__(self):
         return self.poster_name
 
