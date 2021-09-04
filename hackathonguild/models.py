@@ -26,6 +26,9 @@ class Participant(models.Model):
     enthusiasm = models.TextField('意気込み', max_length=200)
     participate_product_id = models.IntegerField('参加プロダクトid')
     participate_date = models.DateField('参加日', default=timezone.now)
+    token = models.CharField('トークン', default='', max_length=200)
+    token_delete_date = models.DateTimeField('トークン削除日',  default=timezone.now)
 
     def __str__(self):
         return self.participant_name
+

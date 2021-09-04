@@ -27,7 +27,8 @@ def send_slack_message(message):
 def get_message(item, action):
     template = get_template('hackthonguild/message.txt')
     context = {
-        "item": item, "action": action,
+        "item": item,
+        "action": action,
     }
     message = template.render(context)
     return message
