@@ -2,36 +2,8 @@
 {% block title %} index {%endblock title %}
 {% block contents %}
 
-<header>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'hackathonguild:index' %}">
-        <img src="{% static 'hackathonguild/images/peopleicon.svg' %}" height="20px" width="20px" alt="man">
-        <strong>Hackathon Guild</strong>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item active">
-            <a class="nav-link" aria-current="page" href="{% url 'hackathonguild:index' %}">募集を見る</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'hackathonguild:make_post' %}">募集する</a>
-          </li>
-        </ul>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="検索" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-  </nav>
-  </header>
-  
   <main>
-  
+
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
@@ -54,7 +26,7 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="{% url 'hackathonguild:post_detail' post.id %}">{{ post.product_name }} role="img" aria-label="Placeholder: {{ post.product_name }}" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ post.product_name }}</text></svg>
-    
+
                     <div class="card-body">
                         <p class="card-text">{{ post.product_brief }}</p>
                         <div class="d-flex justify-content-between align-items-center">
@@ -71,12 +43,12 @@
             </div>
         </div>
         </div>
-  
+
     {% else %}
     <p>No posts are available.</p>
     {% endif %}
   </main>
-  
+
   <footer class="text-muted py-5">
     <div class="container">
       <p class="mb-0">Made by IB ©</p>

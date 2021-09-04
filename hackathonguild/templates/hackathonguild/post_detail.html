@@ -8,15 +8,34 @@
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <input type="hidden" name="participate_product_id" value="{{ post.id }}">
-    
-    <p>参加者名:<input type="text" name="participant_name"></p>
-    <p>参加者メアド:<input type="email" name="participant_mail"></p>
-    <p>参加プロダクトID: <input type="number" name="participate_product_id" value="{{ post.id }}" readonly></p>
-    <p>意気込み:<input type="text" name="enthusiasm" maxlength="200"></p>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="project-info-box mt-0">
+                    <h4>{{ post.product_name }}</h4>
+                    <p class="mb-0">{{ post.product_brief }}</p>
+                </div><!-- / project-info-box -->
+
+                <div class="project-info-box">
+                    <p><b>募集者:</b>{{ post.poster_name }}</p>
+                    <input type="hidden" name="poster_mail" value="{{ post.poster_name }}">
+                    <p><b>ハッカソン開催日:</b>{{ post.hackathon_date }}</p>
+                    <p><b>募集人数:</b>{{ post.recluting_headcount }}</p>
+                    <p><b>資料:</b>{{ post.file }}</p>
+
+                </div><!-- / project-info-box -->
+            </div><!-- / column -->
+
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+            data-bs-target="#participantFormModal">参加申請</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back()">戻る</button>
+    </div>
 
 
-    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#participantFormModal">参加申請</button>
-    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back()">戻る</button>
+
+
 </form>
 
 
@@ -32,34 +51,34 @@
         <form action="{% url 'hackathonguild:join' post.id %}" method="post">
             {% csrf_token %}
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        
+
             <input type="hidden" name="participate_product_id" value="{{ post.id }}">
-        
+
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1">参加者名</span>
                 <input type="text" class="form-control" name="participant_name" placeholder="Participantname" aria-label="Postername" aria-describedby="basic-addon1" maxlength="50">
             </div>
-        
+
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon2">参加者メアド</span>
                 <input type="email" class="form-control" name="participant_mail" placeholder="participant@email.com" aria-label="Participantmail" aria-describedby="basic-addon2" maxlength="50">
             </div>
-        
+
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon3">参加プロダクト名</span>
                 <input type="text" class="form-control" name="participate_product_name" value="{{ post.product_name }}" aria-label="Participateproductname" aria-describedby="basic-addon3" readonly>
             </div>
-        
+
             <div class="input-group">
                 <span class="input-group-text">意気込み</span>
                 <textarea class="form-control" name="enthusiasm" aria-label="With textarea" maxlength="100"></textarea>
             </div>
+
+            <div>
+                <button type="submit" class="btn btn-secondary" name="submit_post" id="submitPost">参加申請</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+            </div>
         </form>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" name="submit_post" id="submitPost">参加申請</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-    </div>
     </div>
 </div>
 </div>

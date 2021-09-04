@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -133,8 +134,10 @@ EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_HOST_USER = 'ibguild2021'
 EMAIL_HOST_PASSWORD = 'Hackathon2109'
 EMAIL_PORT = 587
+
 EMAIL_USE_TLS = True 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # デバッグ用：以下の設定だとコンソールに出力される
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SLACK_WEBHOOK_ENDPOINT = 'https://hooks.slack.com/services/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'
+
