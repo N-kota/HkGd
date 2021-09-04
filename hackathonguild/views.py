@@ -2,11 +2,14 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Post, Participant
 from django.utils import timezone
+from rest_framework import exceptions
 from django.core.mail import send_mail
 from django.conf import settings
 import random
 import string
 import datetime
+import hashlib
+import secrets
 
 
 # Create your views here.
@@ -57,19 +60,40 @@ def join_to_project(request, post_id):
     participate_product_id = request.POST.get('participate_product_id')
     participate_date = timezone.now()
     queryset = Post.objects.get(id = participate_product_id)
+
+    accept_participant_url = 'http://127.0.0.1:8000/hackathonguild/accept_participant/' + secrets.token_urlsafe(64)
+
     poster_mail = (queryset.poster_mail,)
     from_address = 'ibguild2021@gmail.com'
     mail_subject = '参加希望が届いています'
-    mail_massage = str(participant_name)+'からの参加希望が届いています。承認はこちらから'
+    mail_massage = str(participant_name)+'からの参加希望が届いています。承認はこちらから' + accept_participant_url
     print(mail_massage)
     print(poster_mail)
     Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date)
 
-    
     send_mail(mail_subject, mail_massage, from_address, poster_mail, fail_silently=False)
     return redirect('hackathonguild:index')
 
-    
+
+def accept_participant(request, token):
+    #token = request.META.get('HTTP_X_AUTH_TOKEN')
+
+    if not token:
+        # リクエストヘッダにトークンが含まれない場合はエラー
+        raise exceptions.AuthenticationFailed({'message': 'token injustice.'})
+
+    # トークン文字列からトークンを取得する
+    token = ExampleToken.get(token_str)
+    if token == None:
+        # トークンが取得できない場合はエラー
+        raise exceptions.AuthenticationFailed({'message': 'Token not found.'})
+
+    # トークンが取得できた場合は、有効期間をチェック
+    if not token.check_valid_token():
+        # 有効期限切れの場合はエラー
+        raise exceptions.AuthenticationFailed({'message': 'Token expired.'})
+
+    return redirect('hackathonguild:index')
 
 
 def make_random_string(length):
