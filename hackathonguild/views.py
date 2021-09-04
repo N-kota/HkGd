@@ -66,7 +66,7 @@ def join_to_project(request, post_id):
     queryset = Post.objects.get(id = participate_product_id)
 
     endpoint = queryset.webhookURL
-    to_mail = queryset.poster_mail
+    to_mail = (queryset.poster_mail,)
     
     token = secrets.token_urlsafe(64)
     token_delete_date = timezone.datetime.now() + timezone.timedelta(days=1)
