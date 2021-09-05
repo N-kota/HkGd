@@ -62,13 +62,14 @@ def submit_post(request):
 
     delete_key = make_random_string(8)
     posted_date = timezone.datetime.now()
-    #basetime = datetime.time(0,00,00)
-    #post_delete_date = datetime.datetime.combine(timezone.now(), basetime) + datetime.timedelta(hours=1)
     post_delete_date = timezone.datetime.now() + datetime.timedelta(hours=1)
 
     post_to_DB = Post.objects.create(poster_name=poster_name, poster_mail=poster_mail, webhookURL= webhookURL, product_name=product_name, hackathon_date=hackathon_date,
                                      recluting_headcount=recluting_headcount, delete_key=delete_key, product_brief=product_brief, file=file, posted_date=posted_date, post_delete_date=post_delete_date)
 
+    to_mail = (poster_mail,)
+    mail_message = '投稿が完了しました．\n投稿の削除キーは' + delete_key + 'です．'
+    send_email(mail_message, to_mail)
 
     return redirect('hackathonguild:index')
 
@@ -92,8 +93,8 @@ def join_to_project(request, post_id):
 
     Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date, token=token, token_delete_date=token_delete_date)
 
-    send_slack_message(mail_message,endpoint)
-    send_email(mail_message,to_mail)
+    send_slack_message(mail_message, endpoint)
+    send_email(mail_message, to_mail)
 
     return redirect('hackathonguild:index')
 
