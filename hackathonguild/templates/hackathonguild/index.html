@@ -2,6 +2,7 @@
 {% block title %} index {%endblock title %}
 {% block contents %}
 
+
   <main>
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
@@ -32,7 +33,7 @@
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='{% url 'hackathonguild:post_detail' post.id %}'">View</button>
                             </div>
-                            <small class="text-muted">募集:{{ post.recluting_headcount }}人</small>
+                            <small class="text-muted">募集:{{ post.joining_headcount }}/{{ post.recluting_headcount }}人</small>
                             <small class="text-muted">開催:{{ post.hackathon_date }}</small>
                         </div>
                     </div>
@@ -87,12 +88,6 @@
 
 
   </main>
-
-  <footer class="text-muted py-5">
-    <div class="container">
-      <p class="mb-0">Made by IB ©</p>
-    </div>
-  </footer>
 
 {% endblock contents %}
 
