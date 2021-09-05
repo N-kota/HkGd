@@ -30,13 +30,14 @@ def paginate_query(request, queryset, count):
 
 def index(request):
     latest_posts = Post.objects.order_by('-posted_date')
-    page_obj = paginate_query(request, latest_posts, settings.PAGE_PER_ITEM) # ページネーション
+    page_obj = paginate_query(request, latest_posts, settings.PAGE_PER_ITEM)  # ページネーション
 
     context = {
         'latest_posts': latest_posts,
         'page_obj': page_obj,
     }
     return render(request, 'hackathonguild/index.html', context)
+
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
@@ -64,7 +65,7 @@ def submit_post(request):
     posted_date = timezone.datetime.now()
     post_delete_date = timezone.datetime.now() + datetime.timedelta(hours=1)
 
-    post_to_DB = Post.objects.create(poster_name=poster_name, poster_mail=poster_mail, webhookURL= webhookURL, product_name=product_name, hackathon_date=hackathon_date,
+    post_to_DB = Post.objects.create(poster_name=poster_name, poster_mail=poster_mail, webhookURL=webhookURL, product_name=product_name, hackathon_date=hackathon_date,
                                      recluting_headcount=recluting_headcount, delete_key=delete_key, product_brief=product_brief, file=file, posted_date=posted_date, post_delete_date=post_delete_date)
 
     to_mail = (poster_mail,)
@@ -80,7 +81,7 @@ def join_to_project(request, post_id):
     enthusiasm = request.POST.get('enthusiasm')
     participate_product_id = request.POST.get('participate_product_id')
     participate_date = timezone.datetime.now()
-    queryset = Post.objects.get(id = participate_product_id)
+    queryset = Post.objects.get(id=participate_product_id)
 
     endpoint = queryset.webhookURL
     to_mail = (queryset.poster_mail,)
@@ -91,9 +92,11 @@ def join_to_project(request, post_id):
 
     mail_message = str(participant_name)+'からの参加希望が届いています。承認はこちらから' + accept_participant_url
 
-    Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm, participate_product_id=participate_product_id, participate_date=participate_date, token=token, token_delete_date=token_delete_date)
+    Participant.objects.create(participant_name=participant_name, participant_mail=participant_mail, enthusiasm=enthusiasm,
+                               participate_product_id=participate_product_id, participate_date=participate_date, token=token, token_delete_date=token_delete_date)
 
-    send_slack_message(mail_message, endpoint)
+    if endpoint is not '':
+        send_slack_message(mail_message, endpoint)
     send_email(mail_message, to_mail)
 
     return redirect('hackathonguild:index')
@@ -115,7 +118,6 @@ def jump_to_accept_participant(request, token):
         return HttpResponse('有効なトークンではありませんでした．')
 
 
-
 def accept_participant(request):
     token = request.POST.get('token')
     print(token)
@@ -128,18 +130,21 @@ def accept_participant(request):
         participant_query_set.token = ''
         participant_query_set.save()
 
+        poster_queryset.joining_headcount += 1
+        poster_queryset.save()
+
         return redirect('hackathonguild:index')
     else:
         return HttpResponse('有効なトークンではありませんでした．')
 
 
 def make_random_string(length):
-   return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
-def delete_POST(request,post_id):
+def delete_POST(request, post_id):
     input_key = request.POST.get('delete_key')
-    del_POS = Post.objects.get(id = post_id)
+    del_POS = Post.objects.get(id=post_id)
     delete_key = del_POS.delete_key
     if delete_key == input_key:
         del_POS.delete()
@@ -147,4 +152,3 @@ def delete_POST(request,post_id):
 
     else:
         return redirect('hackathonguild:index')
-

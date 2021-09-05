@@ -12,6 +12,7 @@ class Post(models.Model):
     webhookURL = models.TextField('投稿者slackwebhookURL', max_length=100, null=True)
     product_name = models.CharField('プロダクト名', max_length=50)
     hackathon_date = models.DateField('ハッカソン開催日')
+    joining_headcount = models.IntegerField('参加人数', default=0)
     recluting_headcount = models.IntegerField('募集人数')
     delete_key = models.CharField('削除キー', max_length=8)
     product_brief = models.TextField('プロダクト概要', max_length=500, blank=True)

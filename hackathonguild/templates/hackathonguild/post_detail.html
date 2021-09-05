@@ -18,15 +18,20 @@
                     <p><b>募集者:</b>{{ post.poster_name }}</p>
                     <input type="hidden" name="poster_mail" value="{{ post.poster_name }}">
                     <p><b>ハッカソン開催日:</b>{{ post.hackathon_date }}</p>
-                    <p><b>募集人数:</b>{{ post.recluting_headcount }}</p>
+                    <p><b>募集人数:</b>{{ post.joining_headcount }}/{{ post.recluting_headcount }}人</p>
                     <p><b>資料:</b>{{ post.file }}</p>
 
                 </div><!-- / project-info-box -->
             </div><!-- / column -->
 
         </div>
+        {% if post.joining_headcount == post.recluting_headcount %}
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+            data-bs-target="#participantFormModal" disabled>参加申請</button>
+        {% else %}
         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
             data-bs-target="#participantFormModal">参加申請</button>
+        {% endif %}
         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back()">戻る</button>
         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
             data-bs-target="#deleteModal">投稿削除</button>
@@ -75,7 +80,11 @@
                         </div>
 
                         <div>
+                            {% if post.joining_headcount ==  post.recluting_headcount %}
+                            <button type="submit" class="btn btn-secondary" name="submit_post" id="submitPost" disabled>参加申請</button>
+                            {% else %}
                             <button type="submit" class="btn btn-secondary" name="submit_post" id="submitPost">参加申請</button>
+                            {% endif %}
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
                         </div>
                     </form>
