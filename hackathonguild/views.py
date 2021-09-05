@@ -1,4 +1,7 @@
+import re
 from django.db.models import query
+from django.db.models.fields import NullBooleanField
+from django.http import request
 from django.http.request import HttpRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
@@ -61,15 +64,15 @@ def submit_post(request):
     product_brief = request.POST.get('product_brief')
     file = request.POST.get('file')
 
-    delete_key = make_random_string(8)
+    edit_key = make_random_string(8)
     posted_date = timezone.datetime.now()
     post_delete_date = timezone.datetime.now() + datetime.timedelta(hours=1)
 
     post_to_DB = Post.objects.create(poster_name=poster_name, poster_mail=poster_mail, webhookURL=webhookURL, product_name=product_name, hackathon_date=hackathon_date,
-                                     recluting_headcount=recluting_headcount, delete_key=delete_key, product_brief=product_brief, file=file, posted_date=posted_date, post_delete_date=post_delete_date)
+                                     recluting_headcount=recluting_headcount, edit_key=edit_key, product_brief=product_brief, file=file, posted_date=posted_date, post_delete_date=post_delete_date)
 
     to_mail = (poster_mail,)
-    mail_message = '投稿が完了しました．\n投稿の削除キーは' + delete_key + 'です．'
+    mail_message = '投稿が完了しました．\n投稿の削除キーは' + edit_key + 'です．'
     send_email(mail_message, to_mail)
 
     return redirect('hackathonguild:index')
@@ -142,13 +145,38 @@ def make_random_string(length):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
-def delete_POST(request, post_id):
-    input_key = request.POST.get('delete_key')
-    del_POS = Post.objects.get(id=post_id)
-    delete_key = del_POS.delete_key
-    if delete_key == input_key:
+def delete_post(request, post_id):
+    input_key = request.POST.get('edit_key')
+    del_pos = Post.objects.get(id=post_id)
+    edit_key = del_pos.edit_key
+    if edit_key == input_key:
         del_POS.delete()
         return redirect('hackathonguild:index')
 
     else:
         return redirect('hackathonguild:index')
+
+
+def edit_post(request, post_id):
+    input_key = request.POST.get('edit_key')
+    edit_pos = Post.objects.get(id=post_id)
+    edit_key = edit_pos.edit_key
+    if edit_key == input_key:
+        if request.POST.get('poster_mail') != '':
+            edit_pos.poster_mail = request.POST.get('poster_mail')
+        if request.POST.get('product_name') != '':
+            edit_pos.product_name = request.POST.get('product_name')
+        if request.POST.get('recluting_headcount') != '':
+            edit_pos.recluting_headcount = request.POST.get('recluting_headcount')
+        if request.POST.get('webhookURL') != '':
+            edit_pos.webhookURL = request.POST.get('webhookURL')
+        if request.POST.get('hackathon_date') != '':
+            edit_pos.hackathon_date = request.POST.get('hackathon_date')
+        if request.POST.get('product_belif') != '':
+            edit_pos.product_belif = request.POST.get('product_belif')
+        if request.POST.get('file') != '':
+            edit_pos.file = request.POST.get('file')
+
+        edit_pos.save()
+
+    return redirect('hackathonguild:post_detail', post_id)

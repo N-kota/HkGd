@@ -34,6 +34,8 @@
         {% endif %}
         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back()">戻る</button>
         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+            data-bs-target="#editModal">投稿編集</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
             data-bs-target="#deleteModal">投稿削除</button>
     </div>
     </form>
@@ -94,7 +96,7 @@
         </div>
 </main>
 
-<!---deleteModal-->>
+<!---deleteModal-->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -110,8 +112,8 @@
                 <input type="hidden" name="participate_product_id" value="{{ post.id }}">
 
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">削除キー</span>
-                    <input type="text" class="form-control" name="delete_key" placeholder="delete_key" aria-label="delete_key" aria-describedby="basic-addon1" maxlength="50" required>
+                    <span class="input-group-text" id="basic-addon1">編集キー</span>
+                    <input type="text" class="form-control" name="edit_key" placeholder="edit_key" aria-label="edit_key" aria-describedby="basic-addon1" maxlength="50" required>
                 </div>
 
                 <div>
@@ -121,6 +123,78 @@
             </form>
         </div>
     </div>
+    </div>
+</div>
+
+<!---editModal-->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">投稿編集フォーム</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'hackathonguild:edit' post.id %}" method="post">
+                    {% csrf_token %}
+                    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+                    <input type="hidden" name="participate_product_id" value="{{ post.id }}">
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon2">投稿者メアド</span>
+                        <input type="email" class="form-control" name="poster_mail" placeholder="poster@email.com" aria-label="Postermail"
+                            aria-describedby="basic-addon2" maxlength="50">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon3">投稿者slackwebhookURL</span>
+                        <input type="text" class="form-control" name="webhookURL"
+                            placeholder="https://hooks.slack.com/services/your-address" aria-label="webhookURL"
+                            aria-describedby="basic-addon3" maxlength="100">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon4">プロダクト名</span>
+                        <input type="text" class="form-control" name="product_name" placeholder="Productname" aria-label="Productname"
+                            aria-describedby="basic-addon4" maxlength="50">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon5">ハッカソン開催日</span>
+                        <input type="date" class="form-control" name="hackathon_date" placeholder="yyyy/mm/dd" aria-label="Hackathondate"
+                            aria-describedby="basic-addon5">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon6">募集人数</span>
+                        <input type="number" class="form-control" name="recluting_headcount" placeholder="headcount" aria-label="headcount"
+                            aria-describedby="basic-addon6" min="1">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">プロダクト概要</span>
+                        <textarea class="form-control" name="product_brief" aria-label="With textarea" maxlength="200"></textarea>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputFile01">説明資料</label>
+                        <input type="file" class="form-control" name="file" id="inputFile01">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">編集キー</span>
+                        <input type="text" class="form-control" name="edit_key" placeholder="edit_key"
+                            aria-label="edit_key" aria-describedby="basic-addon1" maxlength="50" required>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="btn btn-secondary" name="submit_post" id="submitPost">投稿編集</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock contents %}

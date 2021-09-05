@@ -14,7 +14,7 @@ class Post(models.Model):
     hackathon_date = models.DateField('ハッカソン開催日')
     joining_headcount = models.IntegerField('参加人数', default=0)
     recluting_headcount = models.IntegerField('募集人数')
-    delete_key = models.CharField('削除キー', max_length=8)
+    edit_key = models.CharField('削除キー', max_length=8)
     product_brief = models.TextField('プロダクト概要', max_length=500, blank=True)
     file = models.FileField('説明資料', blank=True)
     posted_date = models.DateTimeField('投稿日', default=timezone.now)
