@@ -129,7 +129,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#Sending Email(追加したところ)
+# Sending Email(追加したところ)
 EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_HOST_USER = 'ibguild2021'
 EMAIL_HOST_PASSWORD = 'Hackathon2109'

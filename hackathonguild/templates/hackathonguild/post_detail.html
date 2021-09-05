@@ -32,7 +32,7 @@
             data-bs-target="#deleteModal">投稿削除</button>
     </div>
     </form>
-    
+
     <!-- participantModal -->
     <div class="modal fade" id="participantFormModal" tabindex="-1" aria-labelledby="participantFormModalLabel"
         aria-hidden="true">
@@ -51,14 +51,14 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">参加者名</span>
                             <input type="text" class="form-control" name="participant_name" placeholder="Participantname"
-                                aria-label="Postername" aria-describedby="basic-addon1" maxlength="50">
+                                aria-label="Postername" aria-describedby="basic-addon1" maxlength="50" required>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon2">参加者メアド</span>
                             <input type="email" class="form-control" name="participant_mail"
                                 placeholder="participant@email.com" aria-label="Participantmail"
-                                aria-describedby="basic-addon2" maxlength="50">
+                                aria-describedby="basic-addon2" maxlength="50" required>
                         </div>
 
                         <div class="input-group mb-3">
@@ -97,14 +97,14 @@
             <form action="{% url 'hackathonguild:delete' post.id %}" method="post">
                 {% csrf_token %}
                 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    
+
                 <input type="hidden" name="participate_product_id" value="{{ post.id }}">
-    
+
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">削除キー</span>
-                    <input type="text" class="form-control" name="delete_key" placeholder="delete_key" aria-label="delete_key" aria-describedby="basic-addon1" maxlength="50">
+                    <input type="text" class="form-control" name="delete_key" placeholder="delete_key" aria-label="delete_key" aria-describedby="basic-addon1" maxlength="50" required>
                 </div>
-                
+
                 <div>
                     <button type="submit" class="btn btn-secondary" name="submit_post" id="submitPost">投稿削除</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
